@@ -119,6 +119,13 @@ export const addNewDoctor = catchAsyncErrors(async(req,res,next)=>{
     {
        return next(new ErrorHandler("👨‍⚕️👩‍⚕️💉Doctor Avatar Required!", 400));
     }
+
+    const {docAvatar} = req.files;
+    const allowedFormates = ["image/png","image/jpeg","image/webp"];
+    if(!allowedFormates.includes(docAvatar.mimetype))
+    {
+       return next(new ErrorHandler("🙏🙏 File format must be png ,jpg/jpeg ,webp"));
+    }
    const {
     firstName,
     lastName,
@@ -130,6 +137,7 @@ export const addNewDoctor = catchAsyncErrors(async(req,res,next)=>{
     password,
     doctorDepartment,
   } = req.body;
+
 
    if (
      !firstName ||
@@ -152,8 +160,8 @@ export const addNewDoctor = catchAsyncErrors(async(req,res,next)=>{
    }
 
    const cloudinaryResponse = await cloudinary.uploader.upload(
-     docAvtar.tempFilePath
-   )
+     docAvatar.tempFilePath
+   );
    if(!cloudinaryResponse || cloudinaryResponse.error)
    {
     console.error(
@@ -180,6 +188,7 @@ export const addNewDoctor = catchAsyncErrors(async(req,res,next)=>{
          url: cloudinaryResponse.secure_url,
        },
      });
+     console.log(doctor);
      res.status(200).json({
         success:true,
         message:"🧑‍⚕️👩‍⚕️New Docter Registerd",
@@ -189,6 +198,7 @@ export const addNewDoctor = catchAsyncErrors(async(req,res,next)=>{
 
 export const getAllDocters = catchAsyncErrors(async(req,res,next)=>{
     const doctors = await User.find({role:"Doctor"});
+    console.log(doctors);
     res.status(200).json({
         success:true,
         doctors,
