@@ -15,6 +15,7 @@ const app = express();
 app.get('/',(req,res)=>{
   res.send('hello Welcome to Arun Hospital Management!')
 })
+
 config({path:"./config/config.env"});
 
 app.use(
