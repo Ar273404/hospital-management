@@ -20,11 +20,12 @@ app.get("/", (req, res) => {
 
 app.use(
   cors({
-    origin: "*",
+    origin: [process.env.DASHBOARD_URL, process.env.FRONTED_URL],
     method: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
   })
 );
+
 // process.env.FRONTED_URL, process.env.DASHBOARD_URL;
 
 app.use(cookieParser());
