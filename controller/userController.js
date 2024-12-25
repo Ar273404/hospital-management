@@ -191,6 +191,34 @@ export const addNewDoctor = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+export const deleteDoctor = catchAsyncErrors(async (req, res, next) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return next(new ErrorHandler("Doctor ID is required for deletion!", 400));
+  }
+
+  const doctor = await User.findOne({ _id: id, role: "Doctor" });
+  // console.log(doctor);
+
+  if (!doctor) {
+    return next(new ErrorHandler("No Doctor Found with the Given ID!", 404));
+  }
+
+  // Delete doctor avatar from Cloudinary if it exists
+  if (doctor.docAvatar?.public_id) {
+    await cloudinary.uploader.destroy(doctor.docAvatar.public_id);
+  }
+
+  await doctor.deleteOne();
+
+  res.status(200).json({
+    success: true,
+    message: "👨‍⚕️👩‍⚕️ Doctor Deleted Successfully!",
+  });
+});
+
+
 export const getAllDocters = catchAsyncErrors(async (req, res, next) => {
   const doctors = await User.find({ role: "Doctor" });
   console.log(doctors);
