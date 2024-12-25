@@ -12,7 +12,7 @@ import {
 const router = express.Router();
 
 router.post("/post",isPatientAuthenticated,postAppointment);
-router.get("/getall",isAdminAuthenticated,getAllAppointment)
+router.get("/getall",isPatientAuthenticated,isAdminAuthenticated,getAllAppointment)
 router.put("/update/:id",isAdminAuthenticated,updateAppointmentStatus);
 router.delete("/delete/:id",isAdminAuthenticated,deleteAppointment);
 
